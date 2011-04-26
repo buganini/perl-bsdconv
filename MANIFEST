@@ -1,4 +1,5 @@
 bsdconv.xs
+eg/example.pl
 Makefile.PL
 MANIFEST
 ppport.h
