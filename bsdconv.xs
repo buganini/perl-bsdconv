@@ -14,11 +14,12 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include <bsdconv.h>
+
 #include "EXTERN.h"
 #include "perl.h"
 #include "XSUB.h"
 
-#include <bsdconv.h>
 #include "ppport.h"
 #include <errno.h>
 #include <string.h>
