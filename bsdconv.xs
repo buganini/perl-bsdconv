@@ -139,6 +139,7 @@ info(p)
 		sv_2mortal((SV*)RETVAL);
 		hv_store(RETVAL, "ierr", 4, newSVuv(ins->ierr), 0);
 		hv_store(RETVAL, "oerr", 4, newSVuv(ins->oerr), 0);
+		hv_store(RETVAL, "score", 4, newSVuv(ins->score), 0);
 	OUTPUT:
 		RETVAL
 
