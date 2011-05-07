@@ -6,6 +6,7 @@ if(!defined($cd)){
 	print bsdconv::error()."\n";
 	exit; 
 }
+bsdconv::insert_phase($cd,'normal_score',bsdconv::INTER,1);
 bsdconv::init($cd);
 while($s=<STDIN>){
 	print bsdconv::conv_chunk($cd,$s);

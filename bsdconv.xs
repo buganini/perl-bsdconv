@@ -28,6 +28,16 @@
 
 MODULE = bsdconv		PACKAGE = bsdconv
 
+BOOT:
+{
+	HV *m;
+
+	m = gv_stashpv("bsdconv", TRUE);
+	newCONSTSUB(m, "FROM", newSViv(FROM));
+	newCONSTSUB(m, "INTER", newSViv(INTER));
+	newCONSTSUB(m, "TO", newSViv(TO));
+}
+
 IV
 create(conversion)
 	char* conversion
@@ -37,6 +47,62 @@ create(conversion)
 		ins=bsdconv_create(conversion);
 		if(ins==NULL) XSRETURN_UNDEF;
 		RETVAL=PTR2IV(ins);
+	OUTPUT:
+		RETVAL
+
+IV
+insert_phase(p, conversion, phase_type, ophasen)
+	IV p
+	char* conversion
+	int phase_type
+	int ophasen
+	PREINIT:
+		struct bsdconv_instance *ins;
+	CODE:
+		ins=INT2PTR(struct bsdconv_instance *, p);
+		RETVAL=bsdconv_insert_phase(ins, conversion, phase_type, ophasen);
+	OUTPUT:
+		RETVAL
+
+IV
+insert_codec(p, conversion, ophasen, ocodecn)
+	IV p
+	char* conversion
+	int ophasen
+	int ocodecn
+	PREINIT:
+		struct bsdconv_instance *ins;
+	CODE:
+		ins=INT2PTR(struct bsdconv_instance *, p);
+		RETVAL=bsdconv_insert_codec(ins, conversion, ophasen, ocodecn);
+	OUTPUT:
+		RETVAL
+
+IV
+replace_phase(p, conversion, phase_type, ophasen)
+	IV p
+	char* conversion
+	int phase_type
+	int ophasen
+	PREINIT:
+		struct bsdconv_instance *ins;
+	CODE:
+		ins=INT2PTR(struct bsdconv_instance *, p);
+		RETVAL=bsdconv_insert_phase(ins, conversion, phase_type, ophasen);
+	OUTPUT:
+		RETVAL
+
+IV
+replace_codec(p, conversion, ophasen, ocodecn)
+	IV p
+	char* conversion
+	int ophasen
+	int ocodecn
+	PREINIT:
+		struct bsdconv_instance *ins;
+	CODE:
+		ins=INT2PTR(struct bsdconv_instance *, p);
+		RETVAL=bsdconv_insert_codec(ins, conversion, ophasen, ocodecn);
 	OUTPUT:
 		RETVAL
 
