@@ -40,6 +40,63 @@ create(conversion)
 	OUTPUT:
 		RETVAL
 
+void
+init(p)
+	IV p
+	PREINIT:
+		struct bsdconv_instance *ins;
+	CODE:
+		ins=INT2PTR(struct bsdconv_instance *, p);
+
+		bsdconv_init(ins);
+
+SV*
+conv_chunk(p, str)
+	IV p
+	SV* str
+	PREINIT:
+		struct bsdconv_instance *ins;
+		char *s;
+		SSize_t l;
+	CODE:
+		ins=INT2PTR(struct bsdconv_instance *, p);
+		s=SvPV(str, l);
+
+		ins->output_mode=BSDCONV_AUTOMALLOC;
+		ins->input.data=s;
+		ins->input.len=l;
+		ins->input.flags=0;
+		bsdconv(ins);
+
+		RETVAL=newSVpvn(ins->output.data, (STRLEN)ins->output.len);
+		free(ins->output.data);
+	OUTPUT:
+		RETVAL
+
+SV*
+conv_chunk_last(p, str)
+	IV p
+	SV* str
+	PREINIT:
+		struct bsdconv_instance *ins;
+		char *s;
+		SSize_t l;
+	CODE:
+		ins=INT2PTR(struct bsdconv_instance *, p);
+		s=SvPV(str, l);
+
+		ins->output_mode=BSDCONV_AUTOMALLOC;
+		ins->input.data=s;
+		ins->input.len=l;
+		ins->input.flags=0;
+		ins->flush=1;
+		bsdconv(ins);
+
+		RETVAL=newSVpvn(ins->output.data, (STRLEN)ins->output.len);
+		free(ins->output.data);
+	OUTPUT:
+		RETVAL
+
 SV*
 conv(p, str)
 	IV p
