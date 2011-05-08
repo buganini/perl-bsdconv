@@ -200,6 +200,7 @@ conv_file(i, f1, f2)
 		FILE *inf, *otf;
 		char *in;
 		char *tmp;
+		int fd;
 	CODE:
 		ins=INT2PTR(struct bsdconv_instance *, i);
 		s1=SvPV(f1, l);
@@ -209,11 +210,11 @@ conv_file(i, f1, f2)
 		tmp=malloc(l+8);
 		strcpy(tmp, s2);
 		strcat(tmp, ".XXXXXX");
-		if(mktemp(tmp)==NULL){
+		if((fd=mkstemp(tmp))==-1){
 			free(tmp);
 			XSRETURN_UNDEF;
 		}
-		otf=fopen(tmp,"w");
+		otf=fdopen(fd,"w");
 		if(!otf){
 			free(tmp);
 			XSRETURN_UNDEF;
