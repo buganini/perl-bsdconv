@@ -26,7 +26,7 @@
 typedef struct bsdconv_instance * Bsdconv;
 
 #define IBUFLEN 1024
-
+#define TEMPLATE "bsdconv(\"%s\")"
 
 MODULE = bsdconv		PACKAGE = bsdconv
 
@@ -96,6 +96,25 @@ DESTROY(ins)
 	Bsdconv ins
 	CODE:
 		bsdconv_destroy(ins);
+
+SV*
+toString(ins)
+	Bsdconv ins
+	PREINIT:
+		char *s;
+		char *s2;
+		int len;
+	CODE:
+		len=sizeof(TEMPLATE);
+		s=bsdconv_pack(ins);
+		len+=strlen(s);
+		s2=malloc(len);
+		sprintf(s2, TEMPLATE, s);
+		free(s);
+		RETVAL=newSVpv(s2, 0);
+		free(s2);
+	OUTPUT:
+		RETVAL
 
 IV
 insert_phase(ins, conversion, phase_type, ophasen)
