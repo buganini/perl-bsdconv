@@ -51,7 +51,16 @@ error()
 	OUTPUT:
 		RETVAL
 
-
+SV*
+codec_check(phase_type, codec)
+	int phase_type
+	char *codec
+	CODE:
+		if(bsdconv_codec_check(phase_type, codec))
+			XSRETURN_YES;
+		XSRETURN_NO;
+	OUTPUT:
+		RETVAL
 
 Bsdconv 
 new(package, conversion)
