@@ -13,7 +13,6 @@
  * IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
-
 #include <bsdconv.h>
 
 #include "EXTERN.h"
@@ -24,7 +23,10 @@
 #include <errno.h>
 #include <string.h>
 
+typedef struct bsdconv_instance * Bsdconv;
+
 #define IBUFLEN 1024
+
 
 MODULE = bsdconv		PACKAGE = bsdconv
 
@@ -38,94 +40,94 @@ BOOT:
 	newCONSTSUB(m, "TO", newSViv(TO));
 }
 
-IV
-create(conversion)
-	char* conversion
+SV*
+error()
 	PREINIT:
-		struct bsdconv_instance *ins;
+		char *s;
 	CODE:
-		ins=bsdconv_create(conversion);
-		if(ins==NULL) XSRETURN_UNDEF;
-		RETVAL=PTR2IV(ins);
+		s=bsdconv_error();
+		RETVAL=newSVpv(s, 0);
+		free(s);
 	OUTPUT:
 		RETVAL
 
+
+
+Bsdconv 
+new(package, conversion)
+	char *package
+	char *conversion
+	CODE:
+		RETVAL=bsdconv_create(conversion);
+	OUTPUT:
+		RETVAL
+
+MODULE = bsdconv		PACKAGE = Bsdconv
+
+void
+DESTROY(ins)
+	Bsdconv ins
+	CODE:
+		bsdconv_destroy(ins);
+
 IV
-insert_phase(p, conversion, phase_type, ophasen)
-	IV p
+insert_phase(ins, conversion, phase_type, ophasen)
+	Bsdconv ins
 	char* conversion
 	int phase_type
 	int ophasen
-	PREINIT:
-		struct bsdconv_instance *ins;
 	CODE:
-		ins=INT2PTR(struct bsdconv_instance *, p);
 		RETVAL=bsdconv_insert_phase(ins, conversion, phase_type, ophasen);
 	OUTPUT:
 		RETVAL
 
 IV
-insert_codec(p, conversion, ophasen, ocodecn)
-	IV p
+insert_codec(ins, conversion, ophasen, ocodecn)
+	Bsdconv ins
 	char* conversion
 	int ophasen
 	int ocodecn
-	PREINIT:
-		struct bsdconv_instance *ins;
 	CODE:
-		ins=INT2PTR(struct bsdconv_instance *, p);
 		RETVAL=bsdconv_insert_codec(ins, conversion, ophasen, ocodecn);
 	OUTPUT:
 		RETVAL
 
 IV
-replace_phase(p, conversion, phase_type, ophasen)
-	IV p
+replace_phase(ins, conversion, phase_type, ophasen)
+	Bsdconv ins
 	char* conversion
 	int phase_type
 	int ophasen
-	PREINIT:
-		struct bsdconv_instance *ins;
 	CODE:
-		ins=INT2PTR(struct bsdconv_instance *, p);
 		RETVAL=bsdconv_insert_phase(ins, conversion, phase_type, ophasen);
 	OUTPUT:
 		RETVAL
 
 IV
-replace_codec(p, conversion, ophasen, ocodecn)
-	IV p
+replace_codec(ins, conversion, ophasen, ocodecn)
+	Bsdconv ins
 	char* conversion
 	int ophasen
 	int ocodecn
-	PREINIT:
-		struct bsdconv_instance *ins;
 	CODE:
-		ins=INT2PTR(struct bsdconv_instance *, p);
 		RETVAL=bsdconv_insert_codec(ins, conversion, ophasen, ocodecn);
 	OUTPUT:
 		RETVAL
 
 void
-init(p)
-	IV p
-	PREINIT:
-		struct bsdconv_instance *ins;
+init(ins)
+	Bsdconv ins
 	CODE:
-		ins=INT2PTR(struct bsdconv_instance *, p);
-
 		bsdconv_init(ins);
 
 SV*
-conv_chunk(p, str)
-	IV p
+conv_chunk(ins, str)
+	Bsdconv ins
 	SV* str
 	PREINIT:
-		struct bsdconv_instance *ins;
 		char *s;
 		SSize_t l;
 	CODE:
-		ins=INT2PTR(struct bsdconv_instance *, p);
 		s=SvPV(str, l);
 
 		ins->output_mode=BSDCONV_AUTOMALLOC;
@@ -140,15 +142,13 @@ conv_chunk(p, str)
 		RETVAL
 
 SV*
-conv_chunk_last(p, str)
-	IV p
+conv_chunk_last(ins, str)
+	Bsdconv ins
 	SV* str
 	PREINIT:
-		struct bsdconv_instance *ins;
 		char *s;
 		SSize_t l;
 	CODE:
-		ins=INT2PTR(struct bsdconv_instance *, p);
 		s=SvPV(str, l);
 
 		ins->output_mode=BSDCONV_AUTOMALLOC;
@@ -164,15 +164,13 @@ conv_chunk_last(p, str)
 		RETVAL
 
 SV*
-conv(p, str)
-	IV p
+conv(ins, str)
+	Bsdconv ins
 	SV* str
 	PREINIT:
-		struct bsdconv_instance *ins;
 		char *s;
 		SSize_t l;
 	CODE:
-		ins=INT2PTR(struct bsdconv_instance *, p);
 		s=SvPV(str, l);
 
 		bsdconv_init(ins);
@@ -189,12 +187,11 @@ conv(p, str)
 		RETVAL
 
 SV*
-conv_file(i, f1, f2)
-	IV i
+conv_file(ins, f1, f2)
+	Bsdconv ins
 	SV* f1
 	SV* f2
 	PREINIT:
-		struct bsdconv_instance *ins;
 		char *s1, *s2;
 		SSize_t l;
 		FILE *inf, *otf;
@@ -202,7 +199,6 @@ conv_file(i, f1, f2)
 		char *tmp;
 		int fd;
 	CODE:
-		ins=INT2PTR(struct bsdconv_instance *, i);
 		s1=SvPV(f1, l);
 		s2=SvPV(f2, l);
 		inf=fopen(s1,"r");
@@ -243,37 +239,14 @@ conv_file(i, f1, f2)
 	OUTPUT:
 		RETVAL
 
-void
-destroy(p)
-	IV p
-	PREINIT:
-		struct bsdconv_instance *ins;
-	CODE:
-		ins=INT2PTR(struct bsdconv_instance *,p);
-		bsdconv_destroy(ins);
-
 HV*
-info(p)
-	IV p
-	PREINIT:
-		struct bsdconv_instance *ins;
+info(ins)
+	Bsdconv ins
 	CODE:
-		ins=INT2PTR(struct bsdconv_instance *, p);
 		RETVAL=newHV();
 		sv_2mortal((SV*)RETVAL);
 		hv_store(RETVAL, "ierr", 4, newSVuv(ins->ierr), 0);
 		hv_store(RETVAL, "oerr", 4, newSVuv(ins->oerr), 0);
 		hv_store(RETVAL, "score", 4, newSVuv(ins->score), 0);
-	OUTPUT:
-		RETVAL
-
-SV*
-error()
-	PREINIT:
-		char *s;
-	CODE:
-		s=bsdconv_error();
-		RETVAL=newSVpv(s, 0);
-		free(s);
 	OUTPUT:
 		RETVAL

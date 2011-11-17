@@ -25,7 +25,7 @@ our @EXPORT = qw(
 	
 );
 
-our $VERSION = '5.0';
+our $VERSION = '6.5';
 
 require XSLoader;
 XSLoader::load('bsdconv', $VERSION);
@@ -38,20 +38,17 @@ __END__
 
 =head1 NAME
 
-bsdconv - Perl extension for blah blah blah
+bsdconv - Perl extension for bsdconv library
 
 =head1 SYNOPSIS
 
-  use bsdconv;
-  blah blah blah
+  see eg/*.pl
 
 =head1 DESCRIPTION
 
 Stub documentation for bsdconv, created by h2xs. It looks like the
 author of the extension was negligent enough to leave the stub
 unedited.
-
-Blah blah blah.
 
 =head2 EXPORT
 
@@ -72,7 +69,7 @@ If you have a web site set up for your module, mention it here.
 
 =head1 AUTHOR
 
-Buganini, E<lt>buganini@twbbs.orgE<gt>
+Buganini, E<lt>buganini@gmail.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 

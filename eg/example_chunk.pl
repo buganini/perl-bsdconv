@@ -1,20 +1,20 @@
 #!/usr/bin/env perl
 use bsdconv;
 
-$cd=bsdconv::create($ARGV[0]);
-if(!defined($cd)){ 
+$c=new bsdconv($ARGV[0]);
+if(!defined($c)){ 
 	print bsdconv::error()."\n";
 	exit; 
 }
-bsdconv::insert_phase($cd,'normal_score',bsdconv::INTER,1);
-bsdconv::init($cd);
+$c->insert_phase('normal_score',bsdconv::INTER,1);
+$c->init();
 while($s=<STDIN>){
-	print bsdconv::conv_chunk($cd,$s);
+	print $c->conv_chunk($s);
 	$str.=$s;
 }
-print bsdconv::conv_chunk_last($cd,'');
-$i=bsdconv::info($cd);
-bsdconv::destroy($cd);
+print $c->conv_chunk_last('');
+$i=$c->info();
+$c=undef;
 print "\n=======Conversion Info=======\n";
 for $k (keys %$i){
 	print "$k=$i->{$k}\n";

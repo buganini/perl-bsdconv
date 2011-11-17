@@ -1,18 +1,23 @@
 #!/usr/bin/env perl
 use bsdconv;
 
-$cd=bsdconv::create($ARGV[0]);
-if(!defined($cd)){ 
+
+#print bsdconv::error();
+
+my $c=new bsdconv($ARGV[0]);
+
+if(!defined($c)){ 
 	print bsdconv::error()."\n";
 	exit; 
 }
+
 $str='';
 while($s=<STDIN>){
 	$str.=$s;
 }
-print bsdconv::conv($cd, $str);
-$i=bsdconv::info($cd);
-bsdconv::destroy($cd);
+print $c->conv($str);
+$i=$c->info();
+$c=undef;
 print "\n=======Conversion Info=======\n";
 for $k (keys %$i){
 	print "$k=$i->{$k}\n";
