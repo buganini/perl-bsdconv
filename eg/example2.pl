@@ -9,3 +9,18 @@ print "\n";
 print bsdconv::codec_check(bsdconv::INTER, '_utf-8');
 print "\n";
 
+print "From\n";
+$a=bsdconv::codecs_list(bsdconv::FROM);
+print join(", ", @$a);
+print "\n\n";
+
+print "Inter\n";
+$a=bsdconv::codecs_list(bsdconv::INTER);
+print join(", ", @$a);
+print "\n\n";
+
+print "To\n";
+$a=bsdconv::codecs_list(bsdconv::TO);
+print join(", ", @$a);
+print "\n\n";
+

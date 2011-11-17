@@ -62,6 +62,24 @@ codec_check(phase_type, codec)
 	OUTPUT:
 		RETVAL
 
+AV*
+codecs_list(phase_type)
+	int phase_type
+	PREINIT:
+		char **list;
+		char **p;
+	CODE:
+		RETVAL=newAV();
+		list=bsdconv_codecs_list(phase_type);
+		p=list;
+		while(*p!=NULL){
+			av_push(RETVAL, newSVpv(*p, 0));
+			free(*p);
+			p+=1;
+		}
+	OUTPUT:
+		RETVAL
+
 Bsdconv 
 new(package, conversion)
 	char *package
