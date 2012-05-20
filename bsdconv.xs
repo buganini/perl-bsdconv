@@ -294,5 +294,8 @@ info(ins)
 		hv_store(RETVAL, "ierr", 4, newSVuv(ins->ierr), 0);
 		hv_store(RETVAL, "oerr", 4, newSVuv(ins->oerr), 0);
 		hv_store(RETVAL, "score", 4, newSVuv(ins->score), 0);
+		hv_store(RETVAL, "full", 4, newSVuv(ins->full), 0);
+		hv_store(RETVAL, "half", 4, newSVuv(ins->half), 0);
+		hv_store(RETVAL, "ambi", 4, newSVuv(ins->ambi), 0);
 	OUTPUT:
 		RETVAL
