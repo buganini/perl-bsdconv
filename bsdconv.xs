@@ -47,7 +47,7 @@ error()
 	CODE:
 		s=bsdconv_error();
 		RETVAL=newSVpv(s, 0);
-		free(s);
+		bsdconv_free(s);
 	OUTPUT:
 		RETVAL
 
@@ -74,9 +74,10 @@ codecs_list(phase_type)
 		p=list;
 		while(*p!=NULL){
 			av_push(RETVAL, newSVpv(*p, 0));
-			free(*p);
+			bsdconv_free(*p);
 			p+=1;
 		}
+		bsdconv_free(list);
 	OUTPUT:
 		RETVAL
 
@@ -110,7 +111,7 @@ toString(ins)
 		len+=strlen(s);
 		s2=malloc(len);
 		sprintf(s2, TEMPLATE, s);
-		free(s);
+		bsdconv_free(s);
 		RETVAL=newSVpv(s2, 0);
 		free(s2);
 	OUTPUT:
@@ -183,7 +184,7 @@ conv_chunk(ins, str)
 		bsdconv(ins);
 
 		RETVAL=newSVpvn(ins->output.data, (STRLEN)ins->output.len);
-		free(ins->output.data);
+		bsdconv_free(ins->output.data);
 	OUTPUT:
 		RETVAL
 
@@ -205,7 +206,7 @@ conv_chunk_last(ins, str)
 		bsdconv(ins);
 
 		RETVAL=newSVpvn(ins->output.data, (STRLEN)ins->output.len);
-		free(ins->output.data);
+		bsdconv_free(ins->output.data);
 	OUTPUT:
 		RETVAL
 
@@ -228,7 +229,7 @@ conv(ins, str)
 		bsdconv(ins);
 
 		RETVAL=newSVpvn(ins->output.data, (STRLEN)ins->output.len);
-		free(ins->output.data);
+		bsdconv_free(ins->output.data);
 	OUTPUT:
 		RETVAL
 
@@ -264,7 +265,7 @@ conv_file(ins, f1, f2)
 
 		bsdconv_init(ins);
 		do{
-			in=malloc(IBUFLEN);
+			in=bsdconv_malloc(IBUFLEN);
 			ins->input.data=in;
 			ins->input.len=fread(in, 1, IBUFLEN, inf);
 			ins->input.flags|=F_FREE;
