@@ -21,9 +21,11 @@
 
 #include "ppport.h"
 #include <errno.h>
+#include <stdio.h>
 #include <string.h>
 
 typedef struct bsdconv_instance * Bsdconv;
+typedef FILE * Bsdconv_file;
 
 #define IBUFLEN 1024
 #define TEMPLATE "bsdconv(\"%s\")"
@@ -38,6 +40,11 @@ BOOT:
 	newCONSTSUB(m, "FROM", newSViv(FROM));
 	newCONSTSUB(m, "INTER", newSViv(INTER));
 	newCONSTSUB(m, "TO", newSViv(TO));
+
+	newCONSTSUB(m, "CTL_ATTACH_SCORE", newSViv(BSDCONV_ATTACH_SCORE));
+	newCONSTSUB(m, "CTL_SET_WIDE_AMBI", newSViv(BSDCONV_SET_WIDE_AMBI));
+	newCONSTSUB(m, "CTL_SET_TRIM_WIDTH", newSViv(BSDCONV_SET_TRIM_WIDTH));
+	newCONSTSUB(m, "CTL_ATTACH_OUTPUT_FILE", newSViv(BSDCONV_ATTACH_OUTPUT_FILE));
 }
 
 SV*
@@ -81,7 +88,33 @@ codecs_list(phase_type)
 	OUTPUT:
 		RETVAL
 
-Bsdconv 
+AV*
+mktemp(template)
+	char *template
+	CODE:
+		char *fn=strdup(template);
+		int fd=bsdconv_mkstemp(fn);
+		if(fd==-1)
+			XSRETURN_UNDEF;
+		FILE *fp=fdopen(fd, "wb+");
+		SV *bsdconv_file=sv_newmortal();
+		sv_setref_pv(bsdconv_file,"Bsdconv_file",(void *) fp);
+		RETVAL=newAV();
+		av_push(RETVAL, newSVsv(bsdconv_file));
+		av_push(RETVAL, newSVpv(fn, 0));
+	OUTPUT:
+		RETVAL
+
+Bsdconv_file
+fopen(filename, mode)
+	char *filename
+	char *mode
+	CODE:
+		RETVAL=fopen(filename, mode);
+	OUTPUT:
+		RETVAL
+
+Bsdconv
 new(package, conversion)
 	char *package
 	char *conversion
@@ -166,6 +199,20 @@ init(ins)
 	Bsdconv ins
 	CODE:
 		bsdconv_init(ins);
+
+void
+ctl(ins, ctl, res, num)
+	Bsdconv ins
+	int ctl
+	SV* res
+	int num
+	CODE:
+		void *ptr=NULL;
+		if(sv_derived_from(res,"Bsdconv_file")){
+			IV tmp = SvIV((SV*)SvRV(res));
+			ptr=(void *)tmp;
+		}
+		bsdconv_ctl(ins, ctl, ptr, num);
 
 SV*
 conv_chunk(ins, str)
@@ -300,3 +347,11 @@ info(ins)
 		hv_store(RETVAL, "ambi", 4, newSVuv(ins->ambi), 0);
 	OUTPUT:
 		RETVAL
+
+MODULE = bsdconv		PACKAGE = Bsdconv_file
+
+void
+DESTROY(fp)
+	Bsdconv_file fp
+	CODE:
+		fclose(fp);
