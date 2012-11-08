@@ -316,10 +316,10 @@ conv_file(ins, f1, f2)
 			XSRETURN_UNDEF;
 		}
 #ifndef WIN32
-			struct stat stat;
-			fstat(fileno(inf), &stat);
-			fchown(fileno(otf), stat.st_uid, stat.st_gid);
-			fchmod(fileno(otf), stat.st_mode);
+		struct stat stat;
+		fstat(fileno(inf), &stat);
+		fchown(fileno(otf), stat.st_uid, stat.st_gid);
+		fchmod(fileno(otf), stat.st_mode);
 #endif
 		bsdconv_init(ins);
 		do{
