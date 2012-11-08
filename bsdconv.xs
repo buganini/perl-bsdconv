@@ -24,6 +24,12 @@
 #include <stdio.h>
 #include <string.h>
 
+#ifndef WIN32
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#endif
+
 typedef struct bsdconv_instance * Bsdconv;
 typedef FILE * Bsdconv_file;
 
@@ -309,7 +315,12 @@ conv_file(ins, f1, f2)
 			free(tmp);
 			XSRETURN_UNDEF;
 		}
-
+#ifndef WIN32
+			struct stat stat;
+			fstat(fileno(inf), &stat);
+			fchown(fileno(otf), stat.st_uid, stat.st_gid);
+			fchmod(fileno(otf), stat.st_mode);
+#endif
 		bsdconv_init(ins);
 		do{
 			in=bsdconv_malloc(IBUFLEN);
