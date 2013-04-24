@@ -25,7 +25,7 @@ our @EXPORT = qw(
 	
 );
 
-our $VERSION = '9.0';
+our $VERSION = '10.0.0';
 
 require XSLoader;
 XSLoader::load('bsdconv', $VERSION);
