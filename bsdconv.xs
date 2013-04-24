@@ -54,6 +54,67 @@ BOOT:
 }
 
 SV*
+insert_phase(conversion, codecs, phase_type, ophasen)
+	char* conversion
+	char* codecs
+	int phase_type
+	int ophasen
+	PREINIT:
+		char *s;
+	CODE:
+		s=bsdconv_insert_phase(conversion, codecs, phase_type, ophasen);
+		RETVAL=newSVpv(s, 0);
+		bsdconv_free(s);
+	OUTPUT:
+		RETVAL
+
+SV*
+insert_codec(conversion, codec, ophasen, ocodecn)
+	char* conversion
+	char* codec
+	int ophasen
+	int ocodecn
+	PREINIT:
+		char *s;
+	CODE:
+		s=bsdconv_insert_codec(conversion, codec, ophasen, ocodecn);
+		RETVAL=newSVpv(s, 0);
+		bsdconv_free(s);
+	OUTPUT:
+		RETVAL
+
+SV*
+replace_phase(conversion, codecs, phase_type, ophasen)
+	char* conversion
+	char* codecs
+	int phase_type
+	int ophasen
+	PREINIT:
+		char *s;
+	CODE:
+		s=bsdconv_replace_phase(conversion, codecs, phase_type, ophasen);
+		RETVAL=newSVpv(s, 0);
+		bsdconv_free(s);
+	OUTPUT:
+		RETVAL
+
+SV*
+replace_codec(conversion, codec, ophasen, ocodecn)
+	char* conversion
+	char* codec
+	int ophasen
+	int ocodecn
+	PREINIT:
+		char *s;
+	CODE:
+		s=bsdconv_replace_codec(conversion, codec, ophasen, ocodecn);
+		RETVAL=newSVpv(s, 0);
+		bsdconv_free(s);
+	OUTPUT:
+		RETVAL
+
+
+SV*
 error()
 	PREINIT:
 		char *s;
@@ -153,50 +214,6 @@ toString(ins)
 		bsdconv_free(s);
 		RETVAL=newSVpv(s2, 0);
 		free(s2);
-	OUTPUT:
-		RETVAL
-
-IV
-insert_phase(ins, conversion, phase_type, ophasen)
-	Bsdconv ins
-	char* conversion
-	int phase_type
-	int ophasen
-	CODE:
-		RETVAL=bsdconv_insert_phase(ins, conversion, phase_type, ophasen);
-	OUTPUT:
-		RETVAL
-
-IV
-insert_codec(ins, conversion, ophasen, ocodecn)
-	Bsdconv ins
-	char* conversion
-	int ophasen
-	int ocodecn
-	CODE:
-		RETVAL=bsdconv_insert_codec(ins, conversion, ophasen, ocodecn);
-	OUTPUT:
-		RETVAL
-
-IV
-replace_phase(ins, conversion, phase_type, ophasen)
-	Bsdconv ins
-	char* conversion
-	int phase_type
-	int ophasen
-	CODE:
-		RETVAL=bsdconv_insert_phase(ins, conversion, phase_type, ophasen);
-	OUTPUT:
-		RETVAL
-
-IV
-replace_codec(ins, conversion, ophasen, ocodecn)
-	Bsdconv ins
-	char* conversion
-	int ophasen
-	int ocodecn
-	CODE:
-		RETVAL=bsdconv_insert_codec(ins, conversion, ophasen, ocodecn);
 	OUTPUT:
 		RETVAL
 
