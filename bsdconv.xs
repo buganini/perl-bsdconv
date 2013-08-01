@@ -361,20 +361,35 @@ conv_file(ins, f1, f2)
 	OUTPUT:
 		RETVAL
 
-HV*
-info(ins)
+void
+counter(ins, ...)
+	Bsdconv ins
+	PREINIT:
+		char *key;
+		HV *hash;
+		struct bsdconv_counter_entry *p;
+		bsdconv_counter_t *v;
+	PPCODE:
+		if(items > 1){
+			key=(char *)SvPV_nolen(ST(1));
+			v=bsdconv_counter(ins, key);
+			PUSHs(sv_2mortal(newSViv(*v)));
+		}else{
+			hash=(HV *)sv_2mortal((SV *)newHV());
+			p=ins->counter;
+			while(p){
+				hv_store(hash, p->key, strlen(p->key), newSVuv(p->val), 0);
+				p=p->next;
+			}
+			EXTEND(SP, 1);
+			PUSHs(newRV_noinc((SV *)hash));
+		}
+
+void
+counter_reset(ins)
 	Bsdconv ins
 	CODE:
-		RETVAL=newHV();
-		sv_2mortal((SV*)RETVAL);
-		hv_store(RETVAL, "ierr", 4, newSVuv(ins->ierr), 0);
-		hv_store(RETVAL, "oerr", 4, newSVuv(ins->oerr), 0);
-		hv_store(RETVAL, "score", 4, newSVnv(ins->score), 0);
-		hv_store(RETVAL, "full", 4, newSVuv(ins->full), 0);
-		hv_store(RETVAL, "half", 4, newSVuv(ins->half), 0);
-		hv_store(RETVAL, "ambi", 4, newSVuv(ins->ambi), 0);
-	OUTPUT:
-		RETVAL
+		bsdconv_counter_reset(ins);
 
 MODULE = bsdconv		PACKAGE = Bsdconv_file
 
