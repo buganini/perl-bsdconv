@@ -16,16 +16,16 @@ our @ISA = qw(Exporter);
 # If you do not need this, moving things directly into @EXPORT or @EXPORT_OK
 # will save memory.
 our %EXPORT_TAGS = ( 'all' => [ qw(
-	
+
 ) ] );
 
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
 our @EXPORT = qw(
-	
+
 );
 
-our $VERSION = '10.0.0';
+our $VERSION = '11.0.0';
 
 require XSLoader;
 XSLoader::load('bsdconv', $VERSION);
