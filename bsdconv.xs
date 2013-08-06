@@ -386,10 +386,17 @@ counter(ins, ...)
 		}
 
 void
-counter_reset(ins)
+counter_reset(ins, ...)
 	Bsdconv ins
-	CODE:
-		bsdconv_counter_reset(ins);
+	PREINIT:
+		char *key;
+	PPCODE:
+		if(items > 1){
+			key=(char *)SvPV_nolen(ST(1));
+			bsdconv_counter_reset(ins, key);
+		}else{
+			bsdconv_counter_reset(ins, NULL);
+		}
 
 MODULE = bsdconv		PACKAGE = Bsdconv_file
 
