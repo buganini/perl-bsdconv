@@ -251,6 +251,7 @@ conv_chunk(ins, str)
 		ins->input.data=s;
 		ins->input.len=l;
 		ins->input.flags=0;
+		ins->input.next=NULL;
 		bsdconv(ins);
 
 		RETVAL=newSVpvn(ins->output.data, (STRLEN)ins->output.len);
@@ -272,6 +273,7 @@ conv_chunk_last(ins, str)
 		ins->input.data=s;
 		ins->input.len=l;
 		ins->input.flags=0;
+		ins->input.next=NULL;
 		ins->flush=1;
 		bsdconv(ins);
 
@@ -295,6 +297,7 @@ conv(ins, str)
 		ins->input.data=s;
 		ins->input.len=l;
 		ins->input.flags=0;
+		ins->input.next=NULL;
 		ins->flush=1;
 		bsdconv(ins);
 
@@ -344,6 +347,7 @@ conv_file(ins, f1, f2)
 			ins->input.data=in;
 			ins->input.len=fread(in, 1, IBUFLEN, inf);
 			ins->input.flags|=F_FREE;
+			ins->input.next=NULL;
 			if(ins->input.len==0){
 				ins->flush=1;
 			}
