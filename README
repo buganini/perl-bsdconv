@@ -1,6 +1,7 @@
 bsdconv version 11.1.0
 ====================
 BSD licensed charset/encoding converter library with more functionalities than libiconv
+This is Perl wrapper
 
 IRC: irc://irc.freenode.net#bsdconv
 
