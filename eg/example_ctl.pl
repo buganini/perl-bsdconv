@@ -7,10 +7,10 @@ $score=$tmp->[0];
 $score_path=$tmp->[1];
 unlink $score_path;
 $list=bsdconv::fopen("characters_list.txt","w+");
-$c=new bsdconv("utf-8:score_train:null");
-if(!defined($c)){ 
+$c=new bsdconv("utf-8:score-train:null");
+if(!defined($c)){
 	print bsdconv::error()."\n";
-	exit; 
+	exit;
 }
 
 $c->ctl(bsdconv::CTL_ATTACH_SCORE, $score, 0);
