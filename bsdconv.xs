@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013 Kuan-Chung Chiu <buganini@gmail.com>
+ * Copyright (c) 2009-2014 Kuan-Chung Chiu <buganini@gmail.com>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -47,10 +47,9 @@ BOOT:
 	newCONSTSUB(m, "INTER", newSViv(INTER));
 	newCONSTSUB(m, "TO", newSViv(TO));
 
-	newCONSTSUB(m, "CTL_ATTACH_SCORE", newSViv(BSDCONV_ATTACH_SCORE));
-	newCONSTSUB(m, "CTL_SET_WIDE_AMBI", newSViv(BSDCONV_SET_WIDE_AMBI));
-	newCONSTSUB(m, "CTL_SET_TRIM_WIDTH", newSViv(BSDCONV_SET_TRIM_WIDTH));
-	newCONSTSUB(m, "CTL_ATTACH_OUTPUT_FILE", newSViv(BSDCONV_ATTACH_OUTPUT_FILE));
+	newCONSTSUB(m, "CTL_ATTACH_SCORE", newSViv(BSDCONV_CTL_ATTACH_SCORE));
+	newCONSTSUB(m, "CTL_ATTACH_OUTPUT_FILE", newSViv(BSDCONV_CTL_ATTACH_OUTPUT_FILE));
+	newCONSTSUB(m, "CTL_AMBIGUOUS_PAD", newSViv(BSDCONV_CTL_AMBIGUOUS_PAD));
 }
 
 SV*
