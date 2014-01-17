@@ -43,6 +43,7 @@ BOOT:
 	HV *m;
 
 	m = gv_stashpv("bsdconv", TRUE);
+	newCONSTSUB(m, "FILTER", newSViv(FILTER));
 	newCONSTSUB(m, "FROM", newSViv(FROM));
 	newCONSTSUB(m, "INTER", newSViv(INTER));
 	newCONSTSUB(m, "TO", newSViv(TO));
