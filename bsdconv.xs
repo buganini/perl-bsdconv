@@ -126,25 +126,25 @@ error()
 		RETVAL
 
 SV*
-codec_check(phase_type, codec)
+module_check(phase_type, codec)
 	int phase_type
 	char *codec
 	CODE:
-		if(bsdconv_codec_check(phase_type, codec))
+		if(bsdconv_module_check(phase_type, codec))
 			XSRETURN_YES;
 		XSRETURN_NO;
 	OUTPUT:
 		RETVAL
 
 AV*
-codecs_list(phase_type)
+modules_list(phase_type)
 	int phase_type
 	PREINIT:
 		char **list;
 		char **p;
 	CODE:
 		RETVAL=newAV();
-		list=bsdconv_codecs_list(phase_type);
+		list=bsdconv_modules_list(phase_type);
 		p=list;
 		while(*p!=NULL){
 			av_push(RETVAL, newSVpv(*p, 0));

@@ -1,22 +1,27 @@
 use bsdconv;
 
-print bsdconv::codec_check(bsdconv::FROM, '_utf-8');
+print bsdconv::module_check(bsdconv::FROM, '_utf-8');
 print "\n";
-print bsdconv::codec_check(bsdconv::INTER, '_utf-8');
+print bsdconv::module_check(bsdconv::INTER, '_utf-8');
 print "\n";
 
+print "Filter\n";
+$a=bsdconv::modules_list(bsdconv::FILTER);
+print join(", ", @$a);
+print "\n\n";
+
 print "From\n";
-$a=bsdconv::codecs_list(bsdconv::FROM);
+$a=bsdconv::modules_list(bsdconv::FROM);
 print join(", ", @$a);
 print "\n\n";
 
 print "Inter\n";
-$a=bsdconv::codecs_list(bsdconv::INTER);
+$a=bsdconv::modules_list(bsdconv::INTER);
 print join(", ", @$a);
 print "\n\n";
 
 print "To\n";
-$a=bsdconv::codecs_list(bsdconv::TO);
+$a=bsdconv::modules_list(bsdconv::TO);
 print join(", ", @$a);
 print "\n\n";
 
